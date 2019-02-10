@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import configparser
 from flask import Flask
+from flask import render_template
 from flask import jsonify
 from pymongo import MongoClient
 
@@ -17,7 +18,7 @@ app.secret_key = b'\xb3\xd7\x03\x95\x9ep`\x0bxg.\xda;\x90\x9fn'
 
 @app.route('/')
 def home():
-	return "Home"
+	return render_template('master')
 
 @app.route('/api/collections')
 def collections():

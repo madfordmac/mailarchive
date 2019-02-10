@@ -10,7 +10,21 @@
 	<title>Mail Archive Viewer</title>
 </head>
 <body>
-	<h1>Meow!</h1>
+	<div id="content" class="container">
+		<div id="head" class="row">
+			<div class="col">
+				<h1>Meow!</h1>
+			</div>
+		</div>
+		<div id="main" class="row">
+			<div id="mailboxes" class="col-md-2">
+				Box List Here
+			</div>
+			<div id="messages" class="col">
+				Message List Here
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>
