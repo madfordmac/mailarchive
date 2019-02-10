@@ -12,7 +12,7 @@ config.read('config.ini')
 maildb = MongoClient(config['DEFAULT']['host'], 27017)[config['DEFAULT']['db']]
 
 # Setup Flask App
-app = Flask.app(__name__)
+app = Flask(__name__)
 app.secret_key = b'\xb3\xd7\x03\x95\x9ep`\x0bxg.\xda;\x90\x9fn'
 
 @app.route('/')
