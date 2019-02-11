@@ -23,3 +23,7 @@ def home():
 @app.route('/api/mailboxes')
 def collections():
 	return jsonify([coll for coll in maildb.list_collection_names() if not coll.startswith("system")])
+
+@app.route('/api/someMessages/<mailbox>')
+def someMessages(mailbox):
+	return jsonify([{'From': msg['From'], 'Subject': msg['Subject']} for msg in maildb[mailbox].find(limit=10, projection=['X-Original-To','From','Received','Subject'])])

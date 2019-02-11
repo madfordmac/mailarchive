@@ -21,13 +21,26 @@
 			<div id="mailboxes" class="col-md-2">
 				<h3>Mailboxes</h3>
 				<ul class="list-group">
-					<li class="list-group-item" ng-repeat="box in mailboxes">
+					<li class="list-group-item" ng-click="boxClick($event, box)" ng-repeat="box in mailboxes">
 						{ng box ng}
 					</li>
 				</ul>
 			</div>
 			<div id="messages" class="col">
-				{ng messages ng}
+				<table>
+					<thead>
+						<tr>
+							<td>From</td>
+							<td>Subject</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="msg in messages">
+							<td>{ng msg.From ng}</td>
+							<td>{ng msg.Subject ng}</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -41,11 +54,23 @@
 		}]);
 
 		app.controller("mailCtrl", function($scope, $http) {
+			// Initialize message list empty
+			$scope.messages = [];
+
+			// Initialize mailbox list from database
 			$http.get("/api/mailboxes")
 			.then(function(response) {
 				$scope.mailboxes = response.data;
 			});
-			$scope.messages = "Message list here...";
+
+			// Handle clicking on a mailbox
+			$scope.boxClick = function($event, mailbox) {
+				$event.currentTarget.class = $event.currentTarget.class + " active";
+				$http.get("/api/someMessages/" + mailbox)
+				.then(function(response) {
+					$scope.messages = response.data;
+				});
+			}
 		})
 	</script>
 </body>
