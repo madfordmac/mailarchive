@@ -3,11 +3,30 @@ import configparser
 from flask import Flask
 from flask import render_template
 from flask import jsonify
+from email.header import decode_header
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 
 # Read our config
 config = configparser.ConfigParser()
 config.read('config.ini')
+
+def headerCleanup(header):
+	if isinstance(header, ObjectId):
+		return str(header)
+	else:
+		clean = ""
+		for text, encoding in decode_header(header):
+			if encoding:
+				clean += text.decode(encoding)
+			elif isinstance(text,str):
+				clean += text
+			elif isinstance(text,bytes):
+				clean += text.decode('utf-8')
+			else:
+				clean += " (???) "
+				app.logger.warning("Unexpected header content: %r", text)
+		return clean
 
 # Setup database
 maildb = MongoClient(config['DEFAULT']['host'], 27017)[config['DEFAULT']['db']]
@@ -26,4 +45,4 @@ def collections():
 
 @app.route('/api/someMessages/<mailbox>')
 def someMessages(mailbox):
-	return jsonify([{'From': msg['From'], 'Subject': msg['Subject']} for msg in maildb[mailbox].find(limit=10, projection=['X-Original-To','From','Received','Subject'])])
+	return jsonify([{hdr: headerCleanup(msg[hdr]) for hdr in msg} for msg in maildb[mailbox].find(limit=10, projection=['X-Original-To','From','Received','Subject'])])
