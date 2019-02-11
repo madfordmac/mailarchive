@@ -19,8 +19,8 @@
 		</div>
 		<div id="main" class="row">
 			<div id="mailboxes" class="col-md-2">
-				<ul>
-					<li ng-repeat="box in mailboxes">
+				<ul class="list-group">
+					<li class="list-group-item" ng-repeat="box in mailboxes">
 						{ng box ng}
 					</li>
 				</ul>
