@@ -20,6 +20,6 @@ app.secret_key = b'\xb3\xd7\x03\x95\x9ep`\x0bxg.\xda;\x90\x9fn'
 def home():
 	return render_template('master')
 
-@app.route('/api/collections')
+@app.route('/api/mailboxes')
 def collections():
 	return jsonify([coll for coll in maildb.list_collection_names() if not coll.startswith("system")])

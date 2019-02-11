@@ -19,7 +19,11 @@
 		</div>
 		<div id="main" class="row">
 			<div id="mailboxes" class="col-md-2">
-				{ng mailboxes ng}
+				<ul>
+					<li ng-repeat="box in mailboxes">
+						{ng box ng}
+					</li>
+				</ul>
 			</div>
 			<div id="messages" class="col">
 				{ng messages ng}
@@ -35,8 +39,11 @@
 			$interpolateProvider.endSymbol('ng}');
 		}]);
 
-		app.controller("mailCtrl", function($scope) {
-			$scope.mailboxes = "Box list here...";
+		app.controller("mailCtrl", function($scope, $http) {
+			$http.get("/api/mailboxes")
+			.then(function(response) {
+				$scope.mailboxes = response.data;
+			});
 			$scope.messages = "Message list here...";
 		})
 	</script>
