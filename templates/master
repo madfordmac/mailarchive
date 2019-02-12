@@ -11,7 +11,7 @@
 	<title>Mail Archive Viewer</title>
 </head>
 <body>
-	<div id="content" class="container" ng-app="mailApp" ng-controller="mailCtrl">
+	<div id="content" class="container-fluid" ng-app="mailApp" ng-controller="mailCtrl">
 		<div id="head" class="row">
 			<div class="col">
 				<h1>Mail Archive Viewer</h1>
@@ -30,13 +30,17 @@
 					<thead>
 						<tr>
 							<th scope="col">From</th>
+							<th scope="col">To</th>
 							<th scope="col">Subject</th>
+							<th scope="col">Date</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr ng-repeat="msg in messages">
 							<td>{ng msg.From ng}</td>
+							<td>{ng msg.To ng}</td>
 							<td>{ng msg.Subject ng}</td>
+							<td>{ng msg.Date ng}</td>
 						</tr>
 					</tbody>
 				</table>

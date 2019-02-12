@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import configparser
+import dateutil.tz
+import dateutil.parser
 from flask import Flask
 from flask import render_template
 from flask import jsonify
@@ -10,6 +12,7 @@ from bson.objectid import ObjectId
 # Read our config
 config = configparser.ConfigParser()
 config.read('config.ini')
+tz = dateutil.tz.gettz(config['DEFAULT']['tz'])
 
 def headerCleanup(header):
 	if isinstance(header, ObjectId):
@@ -45,4 +48,14 @@ def collections():
 
 @app.route('/api/someMessages/<mailbox>')
 def someMessages(mailbox):
-	return jsonify([{hdr: headerCleanup(msg[hdr]) for hdr in msg} for msg in maildb[mailbox].find(limit=10, projection=['X-Original-To','From','Received','Subject'])])
+	data = []
+	for msg in maildb[mailbox].find(limit=10, projection=['X-Original-To','From','Received','Subject']):
+		clean = {}
+		clean['id'] = headerCleanup(msg['_id'])
+		clean['To'] = headerCleanup(msg['X-Original-To'])
+		clean['From'] = headerCleanup(msg['From'])
+		clean['Subject'] = headerCleanup(msg['Subject'])
+		msgDate = dateutil.parser.parse(msg['Received'].split(';')[1]).astimezone(tz)
+		clean['Date'] = "{d:%c}".format(d=msgDate)
+		data.append(clean)
+	return jsonify(data)
