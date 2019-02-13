@@ -11,33 +11,36 @@
 	<title>Mail Archive Viewer</title>
 </head>
 <body>
-	<div id="content" class="container" ng-app="mailApp" ng-controller="mailCtrl">
+	<div id="content" class="container-fluid" ng-app="mailApp" ng-controller="mailCtrl">
 		<div id="head" class="row">
 			<div class="col">
-				<h1>Meow!</h1>
+				<h1>Mail Archive Viewer</h1>
 			</div>
 		</div>
 		<div id="main" class="row">
 			<div id="mailboxes" class="col-md-2">
 				<h3>Mailboxes</h3>
-				<ul class="list-group">
-					<li class="list-group-item" ng-class="{'active':selectedBox === box}" ng-click="boxClick($event, box)" ng-repeat="box in mailboxes">
-						{ng box ng}
-					</li>
-				</ul>
+				<div class="list-group">
+					<a href="#" class="list-group-item list-group-item-action" ng-class="{'active':box === selectedBox}" ng-click="boxClick($event, box)" ng-repeat="box in mailboxes">{ng box ng}</a>
+				</div>
 			</div>
 			<div id="messages" class="col-md-10">
+				<h3>{ng selectedBox ng}</h3>
 				<table class="table table-hover table-sm">
 					<thead>
 						<tr>
 							<th scope="col">From</th>
+							<th scope="col">To</th>
 							<th scope="col">Subject</th>
+							<th scope="col">Date</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr ng-repeat="msg in messages">
 							<td>{ng msg.From ng}</td>
+							<td>{ng msg.To ng}</td>
 							<td>{ng msg.Subject ng}</td>
+							<td>{ng msg.Date ng}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -56,6 +59,7 @@
 		app.controller("mailCtrl", function($scope, $http) {
 			// Initialize message list empty
 			$scope.messages = [];
+			$scope.selectedBox = "⇐ Select a mailbox to view";
 
 			// Initialize mailbox list from database
 			$http.get("/api/mailboxes")
